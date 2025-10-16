@@ -31,6 +31,8 @@ start()
 
 const AuthRoute=require('./routes/authRoute.js')
 const UserRoute=require('./routes/userRoute.js')
+const EmailRoute=require('./routes/emailRoute.js')
 
 app.use('/auth',AuthRoute)
 app.use('/user',UserRoute)
+app.use('/email',EmailRoute)
