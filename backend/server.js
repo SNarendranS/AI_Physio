@@ -27,3 +27,10 @@ const start=async()=>{
 
 }
 start()
+
+
+const AuthRoute=require('./routes/authRoute.js')
+const UserRoute=require('./routes/userRoute.js')
+
+app.use('/auth',AuthRoute)
+app.use('/user',UserRoute)
