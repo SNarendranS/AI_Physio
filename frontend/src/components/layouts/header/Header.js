@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './Header.css';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const Header = ({ isAuthenticated }) => {
@@ -24,7 +24,7 @@ const Header = ({ isAuthenticated }) => {
             <nav className={`nav ${menuOpen ? 'open' : ''}`}>
                 {
                     auth ? <>
-                        <a href="#home">Profile</a>
+                        <Link to='/profile'>Profile</Link>
                         <a href="#services">Form</a>
                         <a href="#about">Exercise</a>
                         <a href="#contact">Contact</a>

@@ -4,8 +4,8 @@ const CustomError = require('../errorHandlers/customError');
 // Get user by username (from req.body)
 const getUser = async (req, res, next) => {
     try {
-        const userReq = req.body.username;
-        const userData = await User.findOne({ username: userReq });
+        const userReq = req.user.email;
+        const userData = await User.findOne({ email: userReq });
         if (!userData) return next(new CustomError('User not available', 404));
 
         const { email, username, name, _id, phoneNumber } = userData;

@@ -1,27 +1,25 @@
 import axios from 'axios'
+const API_URL = process.env.REACT_APP_API_URL
 
-const username=(username)=>{
-    const token=sessionStorage.getItem('token')
-    return axios.post('http://localhost:8080/user/username',{username:username},{headers:{'Authorization':'Bearer '+JSON.parse(token)}})
 
-}
-const user=(id)=>{
+const userById = (id) => {
 
-    return axios.get(`http://localhost:8080/user/${id}`)
+    return axios.get(`${API_URL}/user/${id}`)
 
 }
 
- 
-const publisher=()=>{
-    return axios.get('http://localhost:8080/user')
+
+const user = () => {
+    const token = localStorage.getItem('token')
+    return axios.get(`${API_URL}/user`, { headers: { 'Authorization': 'Bearer ' + JSON.parse(token) } })
 
 }
-const updateProfile=(userChange,update)=>{
-    const token=sessionStorage.getItem('token')
-    return axios.post('http://localhost:8080/user/update',{"user":userChange,"update":update},{headers:{'Authorization':'Bearer '+JSON.parse(token)}})
-    
+const updateProfile = (userChange, update) => {
+    const token = localStorage.getItem('token')
+    return axios.post(`${API_URL}/user/update`, { "user": userChange, "update": update }, { headers: { 'Authorization': 'Bearer ' + JSON.parse(token) } })
+
 }
-const UserService={
-    user,username,publisher,updateProfile 
+const UserService = {
+    user, userById, updateProfile
 }
 export default UserService

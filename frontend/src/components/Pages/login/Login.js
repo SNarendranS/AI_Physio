@@ -32,7 +32,7 @@ const Login = ({ isAuthenticated }) => {
       // Wait a tiny bit to let toast show before navigating
       setTimeout(() => {
         if (auth) {
-          navigate('/inputForm')
+          navigate('/exerciseList')
         }
       }, 100)
     } catch (error) {

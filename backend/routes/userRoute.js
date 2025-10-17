@@ -4,7 +4,7 @@ const authorizeMiddleware = require('../middlewares/authorize')
 const route=express.Router()
 
 route.post('/update',authorizeMiddleware,updateUser)
-route.post('/ ',authorizeMiddleware,getUser)
+route.get('/',authorizeMiddleware,getUser)
 route.get('/:id',getUserById)
  
 

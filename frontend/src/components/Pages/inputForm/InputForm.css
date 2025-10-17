@@ -1,0 +1,91 @@
+/* InputForm.css */
+.input-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    background-color: #f9f9f9;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.input-form {
+    background-color: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    /* ensures it doesn’t stretch too wide */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-sizing: border-box;
+}
+
+.input-form h2 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.input-form label {
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.input-form input[type="text"],
+.input-form select,
+.input-form textarea,
+.input-form input[type="file"],
+.input-form input[type="range"] {
+    width: 100%;
+    /* forces full width but within max-width of form */
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+    transition: border 0.2s;
+}
+
+.input-form input[type="range"] {
+    padding: 10px 0;
+
+}
+
+.input-form input[type="text"]:focus,
+.input-form select:focus,
+.input-form textarea:focus,
+.input-form input[type="file"]:focus {
+    border-color: #007bff;
+}
+
+.input-form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.input-form button {
+    margin-top: 15px;
+    padding: 12px;
+    background-color: #007bff;
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.input-form button:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 500px) {
+    .input-form {
+        padding: 20px;
+    }
+}

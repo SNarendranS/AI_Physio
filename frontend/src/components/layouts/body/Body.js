@@ -4,6 +4,7 @@ import Login from "../../Pages/login/Login";
 import InputForm from "../../Pages/inputForm/InputForm";
 import { Route, Routes, Navigate } from "react-router-dom";
 import Register from "../../Pages/register/Register";
+import Profile from "../../Pages/profile/Profile";
 
 const Body = ({ isAuthenticated }) => {
     // Check if user is logged in
@@ -26,6 +27,12 @@ const Body = ({ isAuthenticated }) => {
                     path="/inputForm"
                     element={
                         auth ? <InputForm /> : <Navigate to="/" replace />
+                    }
+                />
+                                <Route
+                    path="/profile"
+                    element={
+                        auth ? <Profile /> : <Navigate to="/" replace />
                     }
                 />
             </Routes>

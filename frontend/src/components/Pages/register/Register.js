@@ -73,7 +73,7 @@ const Register = ({ isAuthenticated }) => {
       setTimeout(() => {
         if (auth) {
           console.log("registered1")
-          navigate('/')
+          navigate('/exerciseList')
         }
       }, 700)
     } catch (err) {
