@@ -1,12 +1,17 @@
-const express=require('express')
-const { getUser, getUserById, updateUser}=require('../controllers/userController')
-const authorizeMiddleware = require('../middlewares/authorize')
-const route=express.Router()
+const express = require('express');
+const { getUser, getUserById, updateUser } = require('../controllers/userController');
+const authorizeMiddleware = require('../middlewares/authorize');
+const multer = require('multer');
 
-route.post('/update',authorizeMiddleware,updateUser)
-route.get('/',authorizeMiddleware,getUser)
-route.get('/:id',getUserById)
- 
+const router = express.Router();
 
+// Multer setup for profile image upload
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
-module.exports=route
+// Routes
+router.post('/update', authorizeMiddleware, upload.single('profile'), updateUser);
+router.get('/', authorizeMiddleware, getUser);
+router.get('/:id',authorizeMiddleware, getUserById);
+
+module.exports = router;

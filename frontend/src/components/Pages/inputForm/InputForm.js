@@ -1,27 +1,54 @@
 import React, { useState } from 'react';
 import './InputForm.css';
+import PainDataService from '../../../services/painDataService'; // adjust path if needed
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const InputForm = () => {
   const [formData, setFormData] = useState({
     injuryPlace: '',
     painType: '',
-    painLevel: 5,
+    painLevel: 1,
     description: '',
-    doctorSlip: null
+    doctorSlip: null,
   });
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     setFormData({
       ...formData,
-      [name]: files ? files[0] : value
+      [name]: files ? files[0] : value,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form Data:', formData);
-    // send to backend for AI exercise suggestion
+
+    try {
+      const data = new FormData();
+      data.append('injuryPlace', formData.injuryPlace);
+      data.append('painType', formData.painType);
+      data.append('painLevel', formData.painLevel);
+      data.append('description', formData.description);
+
+      if (formData.doctorSlip) {
+        data.append('doctorSlip', formData.doctorSlip);
+      }
+
+      //const response = 
+      await PainDataService.postPainData(data);
+      toast.success('Pain data submitted successfully!');
+      setFormData({
+        injuryPlace: '',
+        painType: '',
+        painLevel: 1,
+        description: '',
+        doctorSlip: null,
+      })
+    } catch (error) {
+      console.error('Error submitting data:', error);
+      toast.error('Failed to submit data. Try again!');
+    }
   };
 
   return (
@@ -76,7 +103,7 @@ const InputForm = () => {
         <input
           type="file"
           name="doctorSlip"
-          accept="image/*,.pdf"
+          accept="image/*"
           onChange={handleChange}
         />
 

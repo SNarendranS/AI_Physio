@@ -12,8 +12,8 @@ function App() {
   return (
     <BrowserRouter>
       <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} />
-      <Header isAuthenticated={[isAuthenticated,setIsAuthenticated]}/>
-      <Body isAuthenticated={[isAuthenticated,setIsAuthenticated]}/>
+      <Header AuthenticatedState={[isAuthenticated,setIsAuthenticated]}/>
+      <Body AuthenticatedState={[isAuthenticated,setIsAuthenticated]}/>
       <Footer />
     </BrowserRouter>
 

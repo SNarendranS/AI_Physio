@@ -1,21 +1,19 @@
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const CustomError = require('../errorHandlers/customError');
-const { isEmailVerified } = require('./emailController'); 
+const { isEmailVerified } = require('./emailController');
 
 const register = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { email } = req.body;
 
     if (!isEmailVerified(email)) {
       throw new Error("Email OTP not verified!");
     }
 
     const user = await User.create(req.body);
-
-    // Automatically log in the user
     const token = jwt.sign(
-      { email: user.email, username: user.username, role: user.role, name: user.name },
+      { email: user.email, username: user.username, name: user.name },
       process.env.JSON_SECRETKEY,
       { expiresIn: '1h' }
     );
@@ -42,7 +40,7 @@ const login = async (req, res, next) => {
     if (!isPasswordValid) return next(new CustomError('Invalid password! Retry.', 401));
 
     const { email, username, role, name } = user;
-    const token = jwt.sign({ email, username, role, name }, process.env.JSON_SECRETKEY, { expiresIn: '1h' });
+    const token = jwt.sign({ email, username, role, name }, process.env.JSON_SECRETKEY, { expiresIn: '7d' });
 
     res.status(200).json({ token });
   } catch (error) {

@@ -1,0 +1,106 @@
+/* ExerciseDetails.css */
+.exercise-details-container {
+  padding: 40px 20px;
+  max-width: 900px;
+  margin: auto;
+  text-align: left;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.details-card {
+  background: #fff;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.details-card h2 {
+  margin-bottom: 10px;
+  color: #1e3a8a;
+}
+
+.details-card p {
+  margin: 6px 0;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.exercise-detail-img {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  object-fit: cover;
+  max-height: 250px;
+}
+
+.progress-container {
+  margin-top: 15px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background: #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2563eb, #1d4ed8);
+}
+
+.camera-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(90deg, #2563eb, #1e40af);
+  border: none;
+  color: #fff;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.camera-btn:hover {
+  background: linear-gradient(90deg, #1e3a8a, #1d4ed8);
+}
+
+.demo-video {
+  display: block;
+  margin: 15px auto 0;
+  width: 100%;
+  max-height: 400px;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .details-card {
+    padding: 20px;
+  }
+
+  .exercise-detail-img {
+    max-height: 200px;
+  }
+
+  .camera-btn {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+
+  .demo-video {
+    max-height: 250px;
+  }
+}

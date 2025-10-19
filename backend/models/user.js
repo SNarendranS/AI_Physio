@@ -8,6 +8,7 @@ const UserSchema = new mongoose.Schema({
     password: { type: String, required: true },
     passwordCheck: { type: String }, // store plain password temporarily
     phoneNumber: { type: String, unique: true, maxlength: 10 },
+    profile: { data: Buffer, contentType: String }
 }, { timestamps: true });
 
 // Hash password before saving

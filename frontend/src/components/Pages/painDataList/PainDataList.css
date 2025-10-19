@@ -1,0 +1,101 @@
+/* PainDataList.css */
+
+.pain-data-list-container {
+    padding: 30px;
+    max-width: 1200px;
+    margin: auto;
+    background: #f9fafb;
+    text-align: center;
+}
+
+.pain-data-list-container h2 {
+    margin-bottom: 25px;
+    color: #1f2937;
+    font-size: 2rem;
+}
+
+.pain-data-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.pain-card {
+    background: #fff;
+    padding: 20px 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.pain-card h3 {
+    margin-bottom: 10px;
+    color: #111827;
+    font-size: 1.3rem;
+}
+
+.pain-card p {
+    margin: 4px 0;
+    color: #4b5563;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.image-section {
+    margin-top: 10px;
+}
+
+.doctor-slip-img {
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 8px;
+    object-fit: cover;
+    max-height: 180px;
+    border: 1px solid #e5e7eb;
+}
+
+.view-exercises-btn {
+    margin-top: 15px;
+    padding: 10px 15px;
+    background: linear-gradient(90deg, #2563eb, #1d4ed8);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: background 0.2s;
+}
+
+.view-exercises-btn:hover {
+    background: linear-gradient(90deg, #1e40af, #1d4ed8);
+}
+
+/* No data text */
+.no-data {
+    color: #6b7280;
+    font-size: 1rem;
+    margin-top: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .pain-data-list-container {
+        padding: 20px 15px;
+    }
+
+    .pain-card {
+        padding: 15px 15px;
+    }
+
+    .pain-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .view-exercises-btn {
+        font-size: 0.9rem;
+    }
+}

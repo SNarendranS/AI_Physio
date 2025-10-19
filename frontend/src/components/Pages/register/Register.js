@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Auth from '../../../services/authService'; // Auth.register & Auth.sendOtp should exist
 import './Register.css';
 
-const Register = ({ isAuthenticated }) => {
+const Register = ({ AuthenticatedState }) => {
   const [formData, setFormData] = useState({
     name: '',
     username: '',
@@ -14,7 +14,7 @@ const Register = ({ isAuthenticated }) => {
     password: '',
     confirmPassword: ''
   });
-  const [auth, setAuth] = isAuthenticated
+  const [auth, setAuth] = AuthenticatedState
 
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState('');

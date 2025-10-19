@@ -12,13 +12,14 @@
   padding: 0 20px;
   height: 60px;
   z-index: 1000;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Logo */
 .logo {
   font-size: 1.5rem;
   font-weight: bold;
+  text-transform: uppercase;
 }
 
 /* Navigation links */
@@ -34,11 +35,20 @@
   font-size: 1rem;
   transition: color 0.3s;
 }
-
+.nav button {
+  color: rgb(237, 226, 17);
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s;
+  border: none;
+  background: none;
+}
 .nav a:hover {
   color: #f39c12;
 }
-
+.nav button:hover {
+  color: #bd2a09;
+}
 /* Hamburger menu - hidden on desktop */
 .hamburger {
   display: none;
@@ -47,7 +57,7 @@
   width: 25px;
   height: 20px;
   cursor: pointer;
-    padding-right: 10%;
+  padding-right: 10%;
 
 }
 

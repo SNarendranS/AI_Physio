@@ -1,43 +1,93 @@
 import React from "react";
 import "./Body.css";
 import Login from "../../Pages/login/Login";
-import InputForm from "../../Pages/inputForm/InputForm";
-import { Route, Routes, Navigate } from "react-router-dom";
 import Register from "../../Pages/register/Register";
+import InputForm from "../../Pages/inputForm/InputForm";
 import Profile from "../../Pages/profile/Profile";
+import PainDataList from "../../Pages/painDataList/PainDataList";
+import { Routes, Route, Navigate } from "react-router-dom";
+import ExerciseList from "../../Pages/exerciseList/ExerciseList";
+import ExerciseDetails from "../../Pages/ExerciseDetails/ExerciseDetails";
 
-const Body = ({ isAuthenticated }) => {
-    // Check if user is logged in
-    const [auth] = isAuthenticated;
+// PrivateRoute: only accessible if logged in
+const PrivateRoute = ({ auth, children }) => {
+    return auth ? children : <Navigate to="/" replace />;
+};
+
+// PublicRoute: only accessible if NOT logged in
+const PublicRoute = ({ auth, children }) => {
+    return !auth ? children : <Navigate to="/profile" replace />;
+};
+
+const Body = ({ AuthenticatedState }) => {
+    const [auth] = AuthenticatedState;
 
     return (
-
         <main className="body-container">
             <Routes>
-                {/* Default route: if logged in → InputForm, else → Login */}
+                {/* Public routes */}
                 <Route
                     path="/"
                     element={
-                        auth ? <Navigate to="/inputForm" replace /> : <Login isAuthenticated={isAuthenticated} />
+                        <PublicRoute auth={auth}>
+                            <Login AuthenticatedState={AuthenticatedState} />
+                        </PublicRoute>
                     }
                 />
-                <Route path="/register" element={<Register isAuthenticated={isAuthenticated}/>}/>
-                {/* InputForm route: if not logged in → Login */}
+                <Route
+                    path="/register"
+                    element={
+                        <PublicRoute auth={auth}>
+                            <Register AuthenticatedState={AuthenticatedState} />
+                        </PublicRoute>
+                    }
+                />
+
+                {/* Private routes */}
                 <Route
                     path="/inputForm"
                     element={
-                        auth ? <InputForm /> : <Navigate to="/" replace />
+                        <PrivateRoute auth={auth}>
+                            <InputForm />
+                        </PrivateRoute>
                     }
                 />
-                                <Route
+                <Route
+                    path="/data"
+                    element={
+                        <PrivateRoute auth={auth}>
+                            <PainDataList />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
                     path="/profile"
                     element={
-                        auth ? <Profile /> : <Navigate to="/" replace />
+                        <PrivateRoute auth={auth}>
+                            <Profile />
+                        </PrivateRoute>
                     }
                 />
+                <Route
+                    path="/exercise"
+                    element={
+                        <PrivateRoute auth={auth}>
+                            <ExerciseList />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/exercise/:isPain/:id"
+                    element={
+                        <PrivateRoute auth={auth}>
+                            <ExerciseDetails />
+                        </PrivateRoute>
+                    }
+                />
+                {/* Fallback route */}
+                <Route path="*" element={<Navigate to={auth ? "/profile" : "/"} replace />} />
             </Routes>
         </main>
-
     );
 };
 

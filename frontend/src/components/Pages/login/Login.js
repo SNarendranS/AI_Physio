@@ -5,10 +5,10 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './Login.css';
 
-const Login = ({ isAuthenticated }) => {
+const Login = ({ AuthenticatedState }) => {
   const [credential, setCredential] = useState({ 'email': '', 'password': '' });
   const navigate = useNavigate()
-  const [auth, setAuth] = isAuthenticated
+  const [auth, setAuth] = AuthenticatedState
   const handleChange = (e) => {
     setCredential({ ...credential, [e.target.name]: e.target.value });
   };
