@@ -19,7 +19,15 @@ const getExercisesByPainData = (id) => {
         headers: { 'Authorization': 'Bearer ' + JSON.parse(token) }
     });
 };
+
+const createExercise = (painDataId) => {
+    const token = localStorage.getItem('token');
+    return axios.post(`${API_URL}/exercise`, painDataId, {
+        headers: { 'Authorization': 'Bearer ' + JSON.parse(token) }
+    });
+};
+
 const exerciseService = {
-     getExercises, getExerciseById , getExercisesByPainData
+    getExercises, getExerciseById, getExercisesByPainData, createExercise
 }
 export default exerciseService

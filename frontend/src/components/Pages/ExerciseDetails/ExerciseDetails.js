@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import './ExerciseDetails.css';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import ExerciseService from '../../../services/exerciseService';
 import PopupCamera from '../popupCamera/PopupCamera';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import createExercise from '../../../utils/CreateExercise';
 
 const ExerciseDetails = () => {
-  const { isPain,id } = useParams(); // painData id
+  //const { isPain, id } = useParams(); // painData id
+
+  const location = useLocation();
+  const { isPain, id } = location.state || {}; // ✅ Hidden, but still accessible
+
   const navigate = useNavigate();
   const [painData, setPainData] = useState(null);
   const [activeCamera, setActiveCamera] = useState(null); // track which exercise camera is open
@@ -16,23 +21,48 @@ const ExerciseDetails = () => {
     const fetchPainData = async () => {
       try {
         let response;
-        if(isPain==="true"){
-                  response = await ExerciseService.getExercisesByPainData(id);
 
-        }
-        else{
-                   response= await ExerciseService.getExerciseById(id);
+        if (isPain) {
+          // 1️⃣ Try fetching existing exercises
+          try {
+            console.log(isPain, typeof (isPain))
 
+            response = await ExerciseService.getExercisesByPainData(id);
+            console.log(response.data)
+
+          } catch (err) {
+            // 2️⃣ If 404, no exercises exist, so create new ones
+            if (err.response && err.response.status === 404) {
+              try {
+                const newResponse = await createExercise.createExerciseForPainData(id);
+                setPainData(newResponse.data.savedExercise);
+
+              } catch (createErr) {
+                //toast.error('Failed to create exercises for this pain data');
+                navigate('/exercise');
+                return; // stop further execution
+              }
+            } else {
+              throw err; // other errors
+            }
+          }
+        } else {
+          response = await ExerciseService.getExerciseById(id);
         }
-        if (!response.data) throw new Error('No data found');
+
+        if (!response?.data) throw new Error('No data found');
         setPainData(response.data);
+
       } catch (error) {
-        toast.error('Failed to load exercises for this pain data');
-        navigate('/exercises');
+        //toast.error('Failed to load exercises for this pain data');
+        navigate('/exercise');
       }
     };
+
     fetchPainData();
-  }, [id, navigate,isPain]);
+  }, [id, navigate, isPain]);
+
+
 
   if (!painData) return <p className="loading">Loading exercises...</p>;
 
@@ -40,7 +70,7 @@ const ExerciseDetails = () => {
     <div className="exercise-details-container">
       <button className="back-btn" onClick={() => navigate(-1)}>← Back</button>
 
-      {painData.exercises.map((exercise) => (
+      {painData.exercises && painData.exercises.map((exercise) => (
         <div className="details-card" key={exercise._id}>
           <h2>{exercise.exerciseName}</h2>
           <p><strong>Type:</strong> {exercise.exerciseType}</p>

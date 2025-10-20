@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import './InputForm.css';
 import PainDataService from '../../../services/painDataService'; // adjust path if needed
+import createExercise from '../../../utils/CreateExercise';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 const InputForm = () => {
   const [formData, setFormData] = useState({
@@ -12,7 +14,7 @@ const InputForm = () => {
     description: '',
     doctorSlip: null,
   });
-
+  const navigate = useNavigate()
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     setFormData({
@@ -35,8 +37,8 @@ const InputForm = () => {
         data.append('doctorSlip', formData.doctorSlip);
       }
 
-      //const response = 
-      await PainDataService.postPainData(data);
+      const response =
+        await PainDataService.postPainData(data);
       toast.success('Pain data submitted successfully!');
       setFormData({
         injuryPlace: '',
@@ -45,11 +47,21 @@ const InputForm = () => {
         description: '',
         doctorSlip: null,
       })
+
+      const newResponse = await createExercise.createExerciseForPainData(response.data.data._id)
+      setTimeout(() => {
+        if (newResponse.data) {
+          navigate(`/exercise/${false}/${response.data.data._id}`);
+        }
+      }, 500)
+
+
     } catch (error) {
       console.error('Error submitting data:', error);
       toast.error('Failed to submit data. Try again!');
     }
   };
+
 
   return (
     <div className="input-form-container">
@@ -79,6 +91,10 @@ const InputForm = () => {
           <option value="throbbing">Throbbing</option>
           <option value="burning">Burning</option>
           <option value="stiffness">Stiffness</option>
+          <option value="aching">Aching</option>
+          <option value="radiating">Radiating</option>
+          <option value="cramping">Cramping</option>
+          <option value="tingling">Tingling</option>
         </select>
 
         <label>Pain Level: {formData.painLevel}</label>

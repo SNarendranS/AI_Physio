@@ -77,13 +77,14 @@ const Body = ({ AuthenticatedState }) => {
                     }
                 />
                 <Route
-                    path="/exercise/:isPain/:id"
+                    path="/exerciseDetail"
                     element={
                         <PrivateRoute auth={auth}>
                             <ExerciseDetails />
                         </PrivateRoute>
                     }
                 />
+
                 {/* Fallback route */}
                 <Route path="*" element={<Navigate to={auth ? "/profile" : "/"} replace />} />
             </Routes>

@@ -20,6 +20,7 @@ const postPainDataById = (id, update) => {
     return axios.post(`${API_URL}/data/${id}`, update)
 }
 
+
 const PainDataService = {
     painData, painDataById, postPainData, postPainDataById
 }

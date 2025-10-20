@@ -27,7 +27,11 @@ const ExerciseList = () => {
   }, []);
 
   const handleOpenExercise = (id) => {
-    navigate(`/exercise/${false}/${id}`); // Each ID refers to the painDataId or session ID
+    //navigate(`/exercise/${false}/${id}`); // Each ID refers to the painDataId or session ID
+    navigate("/exerciseDetail", {
+      state: { isPain: false, id }
+    });
+
   };
 
   return (

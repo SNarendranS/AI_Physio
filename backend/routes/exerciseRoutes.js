@@ -21,6 +21,6 @@ router.get("/painData/:painDataId", authorizeMiddleware, getExerciseByEmailAndPa
 router.get("/id/:id", authorizeMiddleware, getExerciseById);
 
 
-router.post('/', upload.single('image'), createExercise); // Create one exercise
+router.post('/',authorizeMiddleware, upload.single('image'), createExercise); // Create one exercise
 
 module.exports = router;

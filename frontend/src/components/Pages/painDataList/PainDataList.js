@@ -31,10 +31,14 @@ const PainDataList = () => {
     return () => { isMounted = false; };
   }, []);
 
-  const handleViewExercises = async (painDataId) => {
+  const handleViewExercises = async (id) => {
     try {
       const painData = true
-      navigate(`/exercise/${painData}/${painDataId}`);
+      //navigate(`/exercise/${painData}/${painDataId}`);
+      navigate("/exerciseDetail", {
+        state: { isPain: true, id }
+      });
+
     } catch (err) {
       toast.error("Failed to fetch exercises!");
     }
