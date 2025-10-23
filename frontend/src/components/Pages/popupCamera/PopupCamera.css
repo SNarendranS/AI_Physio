@@ -1,0 +1,58 @@
+/* Full screen overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Popup container */
+.popup-camera-container {
+  background: #fff;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  position: relative;
+  text-align: center;
+}
+
+/* Close button */
+.popup-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  font-size: 1.2rem;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+}
+
+.popup-close-btn:hover {
+  background: #dc2626;
+}
+
+/* Camera area styling */
+.camera-area {
+  margin-top: 20px;
+  background: #f3f4f6;
+  border: 2px dashed #9ca3af;
+  border-radius: 12px;
+  height: 350px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #6b7280;
+  font-size: 1rem;
+}

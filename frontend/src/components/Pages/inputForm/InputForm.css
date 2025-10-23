@@ -1,91 +1,137 @@
-/* InputForm.css */
-.input-form-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 80vh;
-    background-color: #f9f9f9;
-    padding: 20px;
-    box-sizing: border-box;
+/* ===============================
+   FORM CONTAINER
+=============================== */
+.form-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 50px 0;
+  background: #f7f9fc;
+  min-height: 100vh;
 }
 
-.input-form {
-    background-color: #fff;
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 500px;
-    /* ensures it doesn’t stretch too wide */
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    box-sizing: border-box;
+.custom-form {
+  background: #fff;
+  padding: 35px 40px;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: transform 0.3s ease;
 }
 
-.input-form h2 {
-    text-align: center;
-    margin-bottom: 10px;
-    color: #333;
+.custom-form:hover {
+  transform: translateY(-3px);
 }
 
-.input-form label {
-    font-weight: 500;
-    color: #555;
-    margin-bottom: 5px;
+.custom-form h2 {
+  text-align: center;
+  color: #1b1b1b;
+  font-size: 24px;
+  margin-bottom: 10px;
+  font-weight: 700;
 }
 
-.input-form input[type="text"],
-.input-form select,
-.input-form textarea,
-.input-form input[type="file"],
-.input-form input[type="range"] {
-    width: 100%;
-    /* forces full width but within max-width of form */
-    box-sizing: border-box;
-    padding: 10px 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    outline: none;
-    font-size: 14px;
-    transition: border 0.2s;
+/* ===============================
+   LABELS
+=============================== */
+.custom-form label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #2f2f2f;
+  margin-bottom: 5px;
 }
 
-.input-form input[type="range"] {
-    padding: 10px 0;
-
+/* ===============================
+   RANGE SLIDER
+=============================== */
+.custom-range {
+  width: 100%;
+  accent-color: #0066ff;
+  cursor: pointer;
+  margin-top: 5px;
 }
 
-.input-form input[type="text"]:focus,
-.input-form select:focus,
-.input-form textarea:focus,
-.input-form input[type="file"]:focus {
-    border-color: #007bff;
+/* ===============================
+   TEXTAREA
+=============================== */
+.custom-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  min-height: 90px;
+  resize: vertical;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  font-size: 14px;
+  font-family: inherit;
 }
 
-.input-form textarea {
-    resize: vertical;
-    min-height: 80px;
+.custom-textarea:focus {
+  border-color: #0066ff;
+  outline: none;
+  box-shadow: 0 0 6px rgba(0, 102, 255, 0.25);
 }
 
-.input-form button {
-    margin-top: 15px;
-    padding: 12px;
-    background-color: #007bff;
-    color: #fff;
-    font-weight: 600;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.3s;
+/* ===============================
+   FILE INPUT
+=============================== */
+.custom-file {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 9px 10px;
+  cursor: pointer;
+  background: #fafafa;
+  transition: background 0.3s, border-color 0.3s;
+  font-size: 14px;
 }
 
-.input-form button:hover {
-    background-color: #0056b3;
+.custom-file:hover {
+  background: #f0f6ff;
+  border-color: #0066ff;
 }
 
+/* ===============================
+   SUBMIT BUTTON
+=============================== */
+.custom-submit {
+  background: #0066ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 15px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 3px 8px rgba(0, 102, 255, 0.25);
+}
+
+.custom-submit:hover {
+  background: #0052cc;
+  transform: translateY(-1.5px);
+}
+
+.custom-submit:active {
+  transform: scale(0.98);
+}
+
+/* ===============================
+   RESPONSIVE
+=============================== */
 @media (max-width: 500px) {
-    .input-form {
-        padding: 20px;
-    }
+  .custom-form {
+    padding: 25px 20px;
+  }
+
+  .custom-form h2 {
+    font-size: 20px;
+  }
+
+  .custom-submit {
+    font-size: 14px;
+  }
 }

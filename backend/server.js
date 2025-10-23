@@ -27,12 +27,13 @@ const start = async () => {
 }
 start()
 
-
+const MetaDataRoute = require('./routes/metaDataRoute.js')
 const AuthRoute = require('./routes/authRoute.js')
 const UserRoute = require('./routes/userRoute.js')
 const EmailRoute = require('./routes/emailRoute.js')
 const painDataRoute = require('./routes/painDataRoute.js')
 const exerciseRoute = require('./routes/exerciseRoutes.js')
+app.use('/metadata', MetaDataRoute)
 app.use('/auth', AuthRoute)
 app.use('/user', UserRoute)
 app.use('/email', EmailRoute)

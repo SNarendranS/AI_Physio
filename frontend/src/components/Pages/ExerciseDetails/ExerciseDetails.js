@@ -17,6 +17,19 @@ const ExerciseDetails = () => {
   const [painData, setPainData] = useState(null);
   const [activeCamera, setActiveCamera] = useState(null); // track which exercise camera is open
 
+
+  const getEmbedUrl = (url) => {
+    if (!url) return '';
+    let videoId = '';
+
+    // Match standard YouTube URL patterns
+    const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/);
+    if (match) videoId = match[1];
+
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
+  };
+
+
   useEffect(() => {
     const fetchPainData = async () => {
       try {
@@ -25,11 +38,7 @@ const ExerciseDetails = () => {
         if (isPain) {
           // 1️⃣ Try fetching existing exercises
           try {
-            console.log(isPain, typeof (isPain))
-
             response = await ExerciseService.getExercisesByPainData(id);
-            console.log(response.data)
-
           } catch (err) {
             // 2️⃣ If 404, no exercises exist, so create new ones
             if (err.response && err.response.status === 404) {
@@ -74,6 +83,8 @@ const ExerciseDetails = () => {
       {painData.exercises && painData.exercises.map((exercise) => (
         <div className="details-card" key={exercise._id}>
           <h2>{exercise.exerciseName}</h2>
+          {exercise.image && <img src={exercise.image} alt='img' />}
+
           <p><strong>Type:</strong> {exercise.exerciseType}</p>
 
           {exercise.exerciseType === 'repetition' && (
@@ -99,11 +110,25 @@ const ExerciseDetails = () => {
             </div>
           </div>
 
-          {exercise.demoVideo && (
+          {/* {exercise.demoVideo && (
             <video className="demo-video" controls>
               <source src={exercise.demoVideo} type="video/mp4" />
             </video>
+          )} */}
+          {exercise.demoVideo && (
+            <div className="demo-video">
+              <iframe
+                width="100%"
+                height="315"
+                src={getEmbedUrl(exercise.demoVideo)}
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
           )}
+
 
           {exercise.aiTrackingEnabled && (
             <button

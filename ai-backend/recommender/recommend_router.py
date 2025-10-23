@@ -3,6 +3,16 @@ from models.pain_data import PainData
 from models.exercise import ExerciseResponse, InnerExercise
 from recommender.recommender import recommend_exercises
 
+
+import logging
+
+
+# -----------------------------
+# Setup logging
+# -----------------------------
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("recommeder")
+
 router = APIRouter(prefix="/ai", tags=["Exercise Recommendation"])
 
 @router.post("/recommend", response_model=ExerciseResponse)
@@ -31,5 +41,7 @@ async def recommend_exercise(data: PainData):
         )
         for ex in exercises
     ]
+    for ex in generated_exercises:
+        logger.info(f"Exercise video link: {ex.demoVideo}")
 
     return ExerciseResponse(exercises=generated_exercises, progress=0)

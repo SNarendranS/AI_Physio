@@ -11,6 +11,7 @@ const Register = ({ AuthenticatedState }) => {
     username: '',
     email: '',
     phoneNumber: '',
+    age:'',
     password: '',
     confirmPassword: ''
   });

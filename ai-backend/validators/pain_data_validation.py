@@ -1,6 +1,5 @@
 #validators/pain_data_validation.py
 
-
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 import re, spacy, logging
@@ -18,14 +17,6 @@ router = APIRouter(prefix="/ai/validate", tags=["PainData Validation"])
 # Load SpaCy model
 # -----------------------------
 nlp = spacy.load("en_core_web_sm")
-
-# -----------------------------
-# Constants
-# -----------------------------
-VALID_INJURY_PLACES = [
-    "head","neck","shoulder","elbow","wrist","hand","finger",
-    "chest","back","hip","thigh","knee","leg","ankle","foot","toe"
-]
 
 # -----------------------------
 # Pydantic model
@@ -49,7 +40,6 @@ def is_real_word(token_text: str) -> bool:
     from spacy.lang.en.stop_words import STOP_WORDS
     token_text = token_text.lower()
     return token_text.isalpha() and token_text not in STOP_WORDS
-
 
 spell = SpellChecker(distance=1)  # distance=1 allows small typos
 
@@ -88,7 +78,6 @@ def is_valid_description(text: str) -> bool:
     # Accept only if at least 2 dictionary words AND has a verb/noun
     return correct_words >= 2 and has_verb_or_noun
 
-
 # -----------------------------
 # Endpoint
 # -----------------------------
@@ -110,12 +99,9 @@ async def validate_pain_data(request: Request):
         logger.error(f"Pydantic validation failed: {e}")
         raise HTTPException(status_code=400, detail=f"Invalid data format: {str(e)}")
 
-    # Injury place validation
-    if data.injuryPlace.lower() not in VALID_INJURY_PLACES:
-        logger.warning(f"Invalid injury place: {data.injuryPlace}")
-        raise HTTPException(status_code=400, detail="Invalid injury place")
-
-    # Description validation
+    # -----------------------------
+    # Description validation only
+    # -----------------------------
     if not is_valid_description(data.description):
         logger.warning(f"Invalid description: {data.description}")
         raise HTTPException(
@@ -123,5 +109,5 @@ async def validate_pain_data(request: Request):
             detail="Invalid description — must be a meaningful English sentence"
         )
 
-    logger.info("Validation complete: Injury place and description are valid")
-    return {"valid": True, "message": "Injury place and description are valid"}
+    logger.info("Validation complete: Description is valid")
+    return {"valid": True, "message": "Description is valid"}

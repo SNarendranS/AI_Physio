@@ -75,7 +75,7 @@ const createExercise = async (req, res, next) => {
   try {
     const userEmail = req.user.email;
     //const { painDataId } = req.body;
-    const  painDataId  = req.user.painDataId;
+    const painDataId = req.user.painDataId;
 
     if (!painDataId) {
       return next(new CustomError('painDataId is required', 400));
@@ -131,7 +131,6 @@ const createExercise = async (req, res, next) => {
       exercises: formattedExercises,
       progress: progress || 0
     });
-
     const savedExercise = await newExercise.save();
 
     res.status(201).json({
