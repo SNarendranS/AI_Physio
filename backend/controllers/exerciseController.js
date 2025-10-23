@@ -87,7 +87,7 @@ const createExercise = async (req, res, next) => {
     }
 
     // 🧠 Call external AI recommender (Python backend)
-    const response = await axios.post(`${process.env.AI_URI}/recommend`, painData, {
+    const response = await axios.post(`${process.env.AI_URI}/ai/recommend`, painData, {
       headers: {
         'Authorization': 'Bearer ' + req.headers.authorization?.split(' ')[1],
         'Content-Type': 'application/json'

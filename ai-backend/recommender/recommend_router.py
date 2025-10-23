@@ -3,9 +3,9 @@ from models.pain_data import PainData
 from models.exercise import ExerciseResponse, InnerExercise
 from recommender.recommender import recommend_exercises
 
-router = APIRouter(prefix="/recommend", tags=["Exercise Recommendation"])
+router = APIRouter(prefix="/ai", tags=["Exercise Recommendation"])
 
-@router.post("/", response_model=ExerciseResponse)
+@router.post("/recommend", response_model=ExerciseResponse)
 async def recommend_exercise(data: PainData):
     exercises = recommend_exercises(
         injury_place=data.injuryPlace,
