@@ -18,10 +18,10 @@ exports.getByUserId = async (req, res) => {
 exports.getByUserEmail = async (req, res) => {
   try {
     const email = req.user.email;
-    const user = await User.findOne({ email: email });
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    // const user = await User.findOne({ email: email });
+    // if (!user) return res.status(404).json({ message: 'User not found' });
 
-    const painData = await PainData.find({ userId: user._id });
+    const painData = await PainData.find({ userEmail: email });
     if (!painData.length) return res.status(404).json({ message: 'No records found' });
     res.status(200).json(painData);
   } catch (err) {
@@ -36,6 +36,7 @@ exports.postByUserId = async (req, res, next) => {
   try {
     const { userId } = req.params;
     const { injuryPlace, painType, painLevel, description } = req.body;
+    const userEmail = req.user.email;
 
     const doctorSlip = req.file
       ? {
@@ -46,6 +47,7 @@ exports.postByUserId = async (req, res, next) => {
 
     const newPainData = new PainData({
       userId,
+      userEmail,
       injuryPlace,
       painType,
       painLevel,
@@ -79,6 +81,7 @@ exports.postByUserEmail = async (req, res) => {
 
     const newPainData = new PainData({
       userId: user._id,
+      userEmail: email,
       injuryPlace,
       painType,
       painLevel,
@@ -94,3 +97,33 @@ exports.postByUserEmail = async (req, res) => {
 };
 
 
+exports.postByUserEmailWithNext = async (req, res, next) => {
+  try {
+    const email = req.user.email;
+    const user = await User.findOne({ email: email });
+    if (!user) return next(new CustomError('User not found', 401))
+
+    const { injuryPlace, painType, painLevel, description } = req.body;
+    const doctorSlip = req.file
+      ? {
+        data: req.file.buffer,
+        contentType: req.file.mimetype
+      }
+      : undefined;
+
+    const newPainData = new PainData({
+      userId: user._id,
+      userEmail: email,
+      injuryPlace,
+      painType,
+      painLevel,
+      description,
+      doctorSlip
+    });
+    const savedPainData = await newPainData.save();
+    req.user.painDataId = savedPainData._id;
+    next()
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

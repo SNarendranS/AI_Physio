@@ -9,8 +9,8 @@ const authorizeMiddleware=(req,res,next)=>{
     try{
         const token=authorizeToken.split(' ')[1]
         const decoded=jwt.verify(token,process.env.JSON_SECRETKEY)
-        const {email,username,name,profile}=decoded
-        req.user={email,username,name,profile}
+        const {email,username,name,profile,_id}=decoded
+        req.user={email,username,name,profile,_id}
         next()
     }catch(error){
         next( new CustomError('not a valid token',401))

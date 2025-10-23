@@ -74,7 +74,8 @@ const getExerciseById = async (req, res, next) => {
 const createExercise = async (req, res, next) => {
   try {
     const userEmail = req.user.email;
-    const { painDataId } = req.body;
+    //const { painDataId } = req.body;
+    const  painDataId  = req.user.painDataId;
 
     if (!painDataId) {
       return next(new CustomError('painDataId is required', 400));
@@ -85,10 +86,10 @@ const createExercise = async (req, res, next) => {
       return next(new CustomError('PainData not found', 404));
     }
 
-    // Call external AI service
+    // 🧠 Call external AI recommender (Python backend)
     const response = await axios.post(`${process.env.AI_URI}/recommend`, painData, {
       headers: {
-        'Authorization': 'Bearer ' + req.headers.authorization?.split(' ')[1], // optional
+        'Authorization': 'Bearer ' + req.headers.authorization?.split(' ')[1],
         'Content-Type': 'application/json'
       }
     });
@@ -99,10 +100,35 @@ const createExercise = async (req, res, next) => {
       return next(new CustomError('Exercises array is required', 400));
     }
 
+    // 🧩 Map AI output → MongoDB schema
+    const formattedExercises = exercises.map(ex => {
+      const formatted = {
+        exerciseName: ex.exerciseName,
+        exerciseType: ex.exerciseType,
+        set: ex.dosage?.sets || 3,
+        targetArea: ex.targetArea,
+        difficulty: ex.difficulty,
+        equipmentNeeded: ex.equipmentNeeded,
+        aiTrackingEnabled: ex.aiTrackingEnabled,
+        description: ex.description,
+        demoVideo: ex.demoVideo,
+        image: ex.image
+      };
+
+      if (ex.exerciseType === 'repetition') {
+        formatted.rep = ex.dosage?.reps || 10;
+      } else if (ex.exerciseType === 'hold') {
+        formatted.holdTime = ex.dosage?.hold_seconds || 5;
+      }
+
+      return formatted;
+    });
+
+    // 🧾 Save to DB
     const newExercise = new Exercise({
       userEmail,
       painDataId,
-      exercises,
+      exercises: formattedExercises,
       progress: progress || 0
     });
 
@@ -116,6 +142,7 @@ const createExercise = async (req, res, next) => {
     next(new CustomError(error.message, 500));
   }
 };
+
 
 
 /**

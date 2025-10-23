@@ -39,8 +39,8 @@ const login = async (req, res, next) => {
     const isPasswordValid = await user.comparePassword(req.body.password);
     if (!isPasswordValid) return next(new CustomError('Invalid password! Retry.', 401));
 
-    const { email, username, role, name } = user;
-    const token = jwt.sign({ email, username, role, name }, process.env.JSON_SECRETKEY, { expiresIn: '7d' });
+    const { email, username, role, name,_id } = user;
+    const token = jwt.sign({ email, username, role, name,_id }, process.env.JSON_SECRETKEY, { expiresIn: '7d' });
 
     res.status(200).json({ token });
   } catch (error) {

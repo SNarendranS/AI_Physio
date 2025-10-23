@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './ExerciseDetails.css';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';  //useParams,
 import ExerciseService from '../../../services/exerciseService';
 import PopupCamera from '../popupCamera/PopupCamera';
-import { toast } from 'react-toastify';
+//import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import createExercise from '../../../utils/CreateExercise';
 
@@ -40,6 +40,7 @@ const ExerciseDetails = () => {
               } catch (createErr) {
                 //toast.error('Failed to create exercises for this pain data');
                 navigate('/exercise');
+
                 return; // stop further execution
               }
             } else {

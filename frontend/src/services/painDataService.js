@@ -16,12 +16,17 @@ const postPainData = (update) => {
     const token = localStorage.getItem('token')
     return axios.post(`${API_URL}/data`, update, { headers: { 'Authorization': 'Bearer ' + JSON.parse(token) } })
 }
+const postPainDataAndCreateExercise = (update) => {
+    const token = localStorage.getItem('token')
+    return axios.post(`${API_URL}/data/exercise`, update, { headers: { 'Authorization': 'Bearer ' + JSON.parse(token) } })
+}
+
 const postPainDataById = (id, update) => {
     return axios.post(`${API_URL}/data/${id}`, update)
 }
 
 
 const PainDataService = {
-    painData, painDataById, postPainData, postPainDataById
+    painData, painDataById, postPainData, postPainDataById,postPainDataAndCreateExercise
 }
 export default PainDataService

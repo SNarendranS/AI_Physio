@@ -1,3 +1,6 @@
+#models/pain_data.py
+
+
 from pydantic import BaseModel, Field
 from typing import Optional, Literal
 
@@ -8,6 +11,7 @@ class DoctorSlip(BaseModel):
 
 class PainData(BaseModel):
     userId: str
+    userEmail:str
     injuryPlace: str
     painType: Literal[
         "sharp",

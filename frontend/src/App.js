@@ -5,19 +5,19 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter } from "react-router-dom";
 import { useState } from "react";
+import ScrollToTop from "./utils/ScrollToTop"; // adjust path
 
 function App() {
-  const [isAuthenticated,setIsAuthenticated]=useState(!!localStorage.getItem("token"))
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
 
   return (
     <BrowserRouter>
       <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} />
-      <Header AuthenticatedState={[isAuthenticated,setIsAuthenticated]}/>
-      <Body AuthenticatedState={[isAuthenticated,setIsAuthenticated]}/>
+      <ScrollToTop />
+      <Header AuthenticatedState={[isAuthenticated, setIsAuthenticated]} />
+      <Body AuthenticatedState={[isAuthenticated, setIsAuthenticated]} />
       <Footer />
     </BrowserRouter>
-
-
   );
 }
 

@@ -6,6 +6,13 @@ const painDataSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  userEmail: {
+    type: String,
+    ref: 'User',
+    required: true,
+    lowercase: true,
+    trim: true
+  },
   injuryPlace: {
     type: String,
     required: true,

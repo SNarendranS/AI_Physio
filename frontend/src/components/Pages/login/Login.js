@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Auth from '../../../services/authService'
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -40,7 +40,7 @@ const Login = ({ AuthenticatedState }) => {
       toast.error("Login Unsuccessful!!!")
     }
   }
-  useEffect(() => { window.scrollTo(0, 0) }, [])
+ 
 
   return (
     <div className="login-container">
