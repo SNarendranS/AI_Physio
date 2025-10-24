@@ -8,8 +8,8 @@ const getUser = async (req, res, next) => {
     const userData = await User.findOne({ email: userReq });
     if (!userData) return next(new CustomError('User not available', 404));
 
-    const { email, username, name, _id, phoneNumber, profile } = userData;
-    res.status(200).json({ email, username, name, _id, phoneNumber, profile });
+    const { email, username, name, _id, phoneNumber, profile, dob } = userData;
+    res.status(200).json({ email, username, name, _id, phoneNumber, profile, dob });
   } catch (error) {
     next(new CustomError(error.message, 500));
   }
@@ -22,8 +22,8 @@ const getUserById = async (req, res, next) => {
     const userData = await User.findById(id);
     if (!userData) return next(new CustomError('User not found', 404));
 
-    const { email, username, name, profile } = userData;
-    res.status(200).json({ email, username, name, profile });
+    const { email, username, name, profile, dob } = userData;
+    res.status(200).json({ email, username, name, profile, dob });
   } catch (error) {
     next(new CustomError(error.message, 500));
   }
@@ -32,17 +32,15 @@ const getUserById = async (req, res, next) => {
 // Update user (including profile image)
 const updateUser = async (req, res, next) => {
   try {
-    // ✅ req.user is added by authorizeMiddleware
     const email = req.user?.email;
     if (!email) return next(new CustomError("Unauthorized user", 401));
 
-    const { name, username } = req.body;
+    const { name, username, dob } = req.body;
 
     const updateDetail = {};
     if (name) updateDetail.name = name;
     if (username) updateDetail.username = username;
-
-    // ✅ Handle uploaded image if present
+    if (dob) updateDetail.dob = dob; // can be "YYYY-MM-DD" string
     if (req.file) {
       updateDetail.profile = {
         data: req.file.buffer,
@@ -50,11 +48,10 @@ const updateUser = async (req, res, next) => {
       };
     }
 
-    // ✅ Find and update user
     const result = await User.findOneAndUpdate(
       { email },
       updateDetail,
-      { new: true }
+      { new: true } // ✅ correct options object
     );
 
     if (!result) return next(new CustomError("User not found", 404));
@@ -68,6 +65,5 @@ const updateUser = async (req, res, next) => {
     next(new CustomError(error.message, 500));
   }
 };
-
 
 module.exports = { getUser, getUserById, updateUser };

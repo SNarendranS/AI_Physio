@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Auth from '../../../services/authService'; // Auth.register & Auth.sendOtp should exist
+import Auth from '../../../services/authService'; // Auth.register, Auth.sendOtp, Auth.verifyOtp must exist
 import './Register.css';
 
 const Register = ({ AuthenticatedState }) => {
@@ -11,12 +11,12 @@ const Register = ({ AuthenticatedState }) => {
     username: '',
     email: '',
     phoneNumber: '',
-    age:'',
+    dob: '',
     password: '',
     confirmPassword: ''
   });
-  const [auth, setAuth] = AuthenticatedState
 
+  const [auth, setAuth] = AuthenticatedState;
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
   const [otpVerified, setOtpVerified] = useState(false);
@@ -32,7 +32,7 @@ const Register = ({ AuthenticatedState }) => {
       return;
     }
     try {
-      await Auth.sendOtp({ email: formData.email }); // backend sends OTP to email
+      await Auth.sendOtp({ email: formData.email });
       setOtpSent(true);
       toast.success(`OTP sent to ${formData.email}`);
     } catch (err) {
@@ -43,7 +43,7 @@ const Register = ({ AuthenticatedState }) => {
 
   const verifyOtp = async () => {
     try {
-      await Auth.verifyOtp({ email: formData.email, otp }); // backend verifies OTP
+      await Auth.verifyOtp({ email: formData.email, otp });
       setOtpVerified(true);
       toast.success('OTP verified successfully!');
     } catch (err) {
@@ -67,22 +67,20 @@ const Register = ({ AuthenticatedState }) => {
 
     try {
       const response = await Auth.register(formData);
-      localStorage.setItem('token', JSON.stringify(response.data.token)); // auto-login
+      localStorage.setItem('token', JSON.stringify(response.data.token));
       toast.success('Registration successful!');
-      setAuth(true)
+      setAuth(true);
 
       setTimeout(() => {
         if (auth) {
-          console.log("registered1")
-          navigate('/exerciseList')
+          navigate('/exerciseList');
         }
-      }, 700)
+      }, 700);
     } catch (err) {
       console.error(err);
       toast.error(err.response?.data?.message || 'Registration failed!');
     }
   };
-
 
   return (
     <div className="register-container">
@@ -92,22 +90,48 @@ const Register = ({ AuthenticatedState }) => {
 
         <div className="input-group">
           <label htmlFor="name">Full Name</label>
-          <input type="text" name="name" id="name" placeholder="Enter full name"
-            value={formData.name} onChange={handleChange} required />
+          <input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="Enter full name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <div className="input-group">
           <label htmlFor="username">Username</label>
-          <input type="text" name="username" id="username" placeholder="Enter username"
-            value={formData.username} onChange={handleChange} required />
+          <input
+            type="text"
+            name="username"
+            id="username"
+            placeholder="Enter username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <div className="input-group">
           <label htmlFor="email">Email</label>
           <div style={{ display: 'flex', gap: '10px' }}>
-            <input type="email" name="email" id="email" placeholder="Enter email"
-              value={formData.email} onChange={handleChange} required disabled={otpSent && !otpVerified} />
-            {!otpVerified && <button type="button" onClick={sendOtp} className="otp-btn">Send OTP</button>}
+            <input
+              type="email"
+              name="email"
+              id="email"
+              placeholder="Enter email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              disabled={otpSent && !otpVerified}
+            />
+            {!otpVerified && (
+              <button type="button" onClick={sendOtp} className="otp-btn">
+                Send OTP
+              </button>
+            )}
           </div>
         </div>
 
@@ -115,29 +139,77 @@ const Register = ({ AuthenticatedState }) => {
           <div className="input-group">
             <label htmlFor="otp">Enter OTP</label>
             <div style={{ display: 'flex', gap: '10px' }}>
-              <input type="text" name="otp" id="otp" placeholder="Enter OTP"
-                value={otp} onChange={(e) => setOtp(e.target.value)} required />
-              <button type="button" className="otp-btn" onClick={verifyOtp}>Verify OTP</button>
+              <input
+                type="text"
+                name="otp"
+                id="otp"
+                placeholder="Enter OTP"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className="otp-btn"
+                onClick={verifyOtp}
+              >
+                Verify OTP
+              </button>
             </div>
           </div>
         )}
 
         <div className="input-group">
           <label htmlFor="phoneNumber">Phone Number</label>
-          <input type="text" name="phoneNumber" id="phoneNumber" placeholder="Enter phone number"
-            value={formData.phoneNumber} onChange={handleChange} required />
+          <input
+            type="text"
+            name="phoneNumber"
+            id="phoneNumber"
+            placeholder="Enter phone number"
+            value={formData.phoneNumber}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* 🎂 Date of Birth Input */}
+        <div className="input-group">
+          <label htmlFor="dob">Date of Birth</label>
+          <input
+            type="date"
+            name="dob"
+            id="dob"
+            value={formData.dob}
+            onChange={handleChange}
+            required
+            className="dob-input"
+          />
         </div>
 
         <div className="input-group">
           <label htmlFor="password">Password</label>
-          <input type="password" name="password" id="password" placeholder="Enter password"
-            value={formData.password} onChange={handleChange} required />
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Enter password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <div className="input-group">
           <label htmlFor="confirmPassword">Confirm Password</label>
-          <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm password"
-            value={formData.confirmPassword} onChange={handleChange} required />
+          <input
+            type="password"
+            name="confirmPassword"
+            id="confirmPassword"
+            placeholder="Confirm password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <button type="submit" className="register-btn">Register</button>
