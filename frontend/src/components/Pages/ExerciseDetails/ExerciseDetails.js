@@ -6,7 +6,7 @@ import PopupCamera from '../popupCamera/PopupCamera';
 //import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import createExercise from '../../../utils/CreateExercise';
-
+import { Capitalize } from '../../../utils/StringFunctions'
 const ExerciseDetails = () => {
   //const { isPain, id } = useParams(); // painData id
 
@@ -82,10 +82,10 @@ const ExerciseDetails = () => {
 
       {painData.exercises && painData.exercises.map((exercise) => (
         <div className="details-card" key={exercise._id}>
-          <h2>{exercise.exerciseName}</h2>
+          <h2>{Capitalize(exercise.exerciseName)}</h2>
           {exercise.image && <img src={exercise.image} alt='img' />}
 
-          <p><strong>Type:</strong> {exercise.exerciseType}</p>
+          <p><strong>Type:</strong> {Capitalize(exercise.exerciseType)}</p>
 
           {exercise.exerciseType === 'repetition' && (
             <p><strong>Reps:</strong> {exercise.rep} × {exercise.set}</p>
@@ -94,9 +94,9 @@ const ExerciseDetails = () => {
             <p><strong>Hold Time:</strong> {exercise.holdTime}s × {exercise.set}</p>
           )}
 
-          <p><strong>Target Area:</strong> {exercise.targetArea || 'N/A'}</p>
-          <p><strong>Equipment:</strong> {exercise.equipmentNeeded}</p>
-          <p><strong>Difficulty:</strong> {exercise.difficulty}</p>
+          <p><strong>Target Area:</strong> {Capitalize(exercise.targetArea) || 'N/A'}</p>
+          <p><strong>Equipment:</strong> {Capitalize(exercise.equipmentNeeded)}</p>
+          <p><strong>Difficulty:</strong> {Capitalize(exercise.difficulty)}</p>
           <p><strong>Description:</strong> {exercise.description || 'N/A'}</p>
           <p><strong>Completed Sets:</strong> {exercise.completedSets}/{exercise.set}</p>
 

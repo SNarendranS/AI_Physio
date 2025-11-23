@@ -27,6 +27,6 @@ const postPainDataById = (id, update) => {
 
 
 const PainDataService = {
-    painData, painDataById, postPainData, postPainDataById,postPainDataAndCreateExercise
+    painData, painDataById, postPainData, postPainDataById, postPainDataAndCreateExercise
 }
 export default PainDataService

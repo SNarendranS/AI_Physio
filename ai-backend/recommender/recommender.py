@@ -371,3 +371,4 @@ def train_simple_model(training_data: List[Dict[str, Any]]) -> None:
     # Example: use logistic regression on engineered features (target match, pain_type compat, intensity)
     # Not implemented here. Keep as a hook.
     pass
+
