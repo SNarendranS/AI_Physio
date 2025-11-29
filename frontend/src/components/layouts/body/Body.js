@@ -8,6 +8,7 @@ import PainDataList from "../../Pages/painDataList/PainDataList";
 import { Routes, Route, Navigate } from "react-router-dom";
 import ExerciseList from "../../Pages/exerciseList/ExerciseList";
 import ExerciseDetails from "../../Pages/ExerciseDetails/ExerciseDetails";
+import ContactsPage from "../../Pages/contact/Contact";
 
 // PrivateRoute: only accessible if logged in
 const PrivateRoute = ({ auth, children }) => {
@@ -65,6 +66,14 @@ const Body = ({ AuthenticatedState }) => {
                     element={
                         <PrivateRoute auth={auth}>
                             <Profile />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/contact"
+                    element={
+                        <PrivateRoute auth={auth}>
+                            <ContactsPage />
                         </PrivateRoute>
                     }
                 />
