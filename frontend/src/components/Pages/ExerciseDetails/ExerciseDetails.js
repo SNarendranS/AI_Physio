@@ -130,22 +130,22 @@ const ExerciseDetails = () => {
           )}
 
 
-          {exercise.aiTrackingEnabled && (
+          {/* {exercise.aiTrackingEnabled && (
             <button
               className="camera-btn"
               onClick={() => setActiveCamera(exercise._id)}
             >
               🎥 Open AI Camera
             </button>
-          )}
+          )} */}
 
-          {/* PopupCamera for this exercise */}
+          {/* PopupCamera for this exercise
           {activeCamera === exercise._id && (
             <PopupCamera
               exercise={exercise}
               onClose={() => setActiveCamera(null)}
             />
-          )}
+          )} */}
         </div>
       ))}
     </div>
