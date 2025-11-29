@@ -47,6 +47,11 @@ const InputForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      if (!formData || !formData.injuryPlace || !formData.painType || !formData.description) {
+        toast.error("Invalid Input!");
+        return;
+      }
+
       const data = new FormData();
       Object.entries(formData).forEach(([key, val]) => data.append(key, val ?? ""));
       const response = await PainDataService.postPainDataAndCreateExercise(data);
