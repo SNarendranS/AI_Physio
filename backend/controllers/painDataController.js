@@ -1,6 +1,10 @@
 const PainData = require('../models/painData');
 const User = require('../models/user');
-const { createExercise } = require('./exerciseController');
+const axios = require('axios');
+const CustomError = require('../errorHandlers/customError');
+
+// 🔗 FASTAPI URL
+const AI_URL = process.env.AI_URI || 'http://127.0.0.1:8000/assess';
 
 // 📍 Get pain data by user ID
 exports.getByUserId = async (req, res) => {
@@ -14,13 +18,10 @@ exports.getByUserId = async (req, res) => {
   }
 };
 
-// 📍 Get pain data by user Email
+// 📍 Get pain data by Email
 exports.getByUserEmail = async (req, res) => {
   try {
     const email = req.user.email;
-    // const user = await User.findOne({ email: email });
-    // if (!user) return res.status(404).json({ message: 'User not found' });
-
     const painData = await PainData.find({ userEmail: email });
     if (!painData.length) return res.status(404).json({ message: 'No records found' });
     res.status(200).json(painData);
@@ -29,101 +30,58 @@ exports.getByUserEmail = async (req, res) => {
   }
 };
 
-// 📍 Post pain data by user ID
-
-
-exports.postByUserId = async (req, res, next) => {
-  try {
-    const { userId } = req.params;
-    const { injuryPlace, painType, painLevel, description } = req.body;
-    const userEmail = req.user.email;
-
-    const doctorSlip = req.file
-      ? {
-        data: req.file.buffer,
-        contentType: req.file.mimetype
-      }
-      : undefined;
-
-    const newPainData = new PainData({
-      userId,
-      userEmail,
-      injuryPlace,
-      painType,
-      painLevel,
-      description,
-      doctorSlip
-    });
-
-    const savedPainData = await newPainData.save();
-
-    res.status(201).json({ message: 'Pain data saved successfully', data: savedPainData });
-  } catch (err) {
-    next(err); // Use next to pass errors to middleware
-  }
-};
-
-
-// 📍 Post pain data by user Email
-exports.postByUserEmail = async (req, res) => {
-  try {
-    const email = req.user.email;
-    const user = await User.findOne({ email: email });
-    if (!user) return res.status(404).json({ message: 'User not found' });
-
-    const { injuryPlace, painType, painLevel, description } = req.body;
-    const doctorSlip = req.file
-      ? {
-        data: req.file.buffer,
-        contentType: req.file.mimetype
-      }
-      : undefined;
-
-    const newPainData = new PainData({
-      userId: user._id,
-      userEmail: email,
-      injuryPlace,
-      painType,
-      painLevel,
-      description,
-      doctorSlip
-    });
-
-    const savedPainData = await newPainData.save();
-    res.status(201).json({ message: 'Pain data saved successfully', data: savedPainData });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-
+// ✅ CREATE PainData → Call AI → Attach AI fields
 exports.postByUserEmailWithNext = async (req, res, next) => {
   try {
     const email = req.user.email;
-    const user = await User.findOne({ email: email });
-    if (!user) return next(new CustomError('User not found', 401))
+    const user = await User.findOne({ email });
+    if (!user) return next(new CustomError('User not found', 401));
 
-    const { injuryPlace, painType, painLevel, description } = req.body;
-    const doctorSlip = req.file
-      ? {
-        data: req.file.buffer,
-        contentType: req.file.mimetype
-      }
-      : undefined;
+    const {
+      chiefComplaint,
+      painSeverity,
+      history,
+      goals,
+      extraContext
+    } = req.body;
 
     const newPainData = new PainData({
       userId: user._id,
       userEmail: email,
-      injuryPlace,
-      painType,
-      painLevel,
-      description,
-      doctorSlip
+      chiefComplaint,
+      painSeverity,
+      history,
+      goals,
+      extraContext
     });
+
     const savedPainData = await newPainData.save();
+
+    // 🔥 Call FastAPI AI
+    const aiRes = await axios.post(process.env.AI_URI || 'http://127.0.0.1:8000/assess', {
+      age: req.body.age || null,
+      sex: req.body.sex || null,
+      chief_complaint: chiefComplaint,
+      pain_severity_0_10: painSeverity,
+      history,
+      goals,
+      extra_context: extraContext,
+      question_rounds: 0
+    });
+
+    const ai = aiRes.data;
+
+    // Save AI metadata
+    savedPainData.aiSessionId = ai.session_id;
+    savedPainData.aiTriage = ai.triage;
+    savedPainData.aiReasons = ai.reasons;
+    await savedPainData.save();
+
     req.user.painDataId = savedPainData._id;
-    next()
+    req.aiPayload = ai;
+
+    next();
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    next(new CustomError(err.message, 500));
   }
 };

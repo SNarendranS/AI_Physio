@@ -7,75 +7,31 @@ const innerExerciseSchema = new mongoose.Schema({
     trim: true
   },
 
-  exerciseType: {
+  reps: {
     type: String,
-    enum: ['repetition', 'hold'],
     required: true
   },
 
-  rep: {
-    type: Number,
-    required: function () {
-      return this.exerciseType === 'repetition';
-    },
-    min: 1
-  },
-
-  holdTime: {
-    type: Number,
-    required: function () {
-      return this.exerciseType === 'hold';
-    },
-    min: 1
-  },
-
-  set: {
-    type: Number,
-    required: true,
-    min: 1,
-    max: 10,
-    default: 3
-  },
-
-  completedSets: {
-    type: Number,
-    default: 0,
-    min: 0
-  },
-
-  targetArea: {
+  sets: {
     type: String,
-    trim: true
+    required: true
   },
 
-  difficulty: {
-    type: String,
-    enum: ['easy', 'medium', 'hard'],
-    default: 'easy'
-  },
-
-  equipmentNeeded: {
-    type: String,
-    default: 'None'
-  },
-
-  aiTrackingEnabled: {
-    type: Boolean,
-    default: true
-  },
-
-  description: {
-    type: String,
-    trim: true
-  },
-
-  demoVideo: {
+  frequency: {
     type: String
   },
 
-  image: {
-    data: Buffer,
-    contentType: String
+  precautions: {
+    type: String
+  },
+
+  description: {
+    type: String
+  },
+
+  completed: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -83,36 +39,37 @@ const exerciseSchema = new mongoose.Schema(
   {
     userEmail: {
       type: String,
-      ref: 'User',
       required: true,
       lowercase: true,
       trim: true
     },
 
     painDataId: {
-      type: String,
-      required: true,
-      unique: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'PainData',
+      required: true
+    },
+
+    aiSummary: {
+      type: String
     },
 
     exercises: [innerExerciseSchema],
 
     progress: {
       type: Number,
-      default: 0, // auto-calculated based on exercises completion
-      min: 0,
-      max: 100
+      default: 0
     }
   },
   { timestamps: true }
 );
 
-// Auto-update total progress before saving
+// Progress auto-update
 exerciseSchema.pre('save', function (next) {
   if (this.exercises.length > 0) {
-    const totalSets = this.exercises.reduce((acc, ex) => acc + ex.set, 0);
-    const completedSets = this.exercises.reduce((acc, ex) => acc + (ex.completedSets || 0), 0);
-    this.progress = Math.min(100, Math.round((completedSets / totalSets) * 100));
+    const total = this.exercises.length;
+    const done = this.exercises.filter(e => e.completed).length;
+    this.progress = Math.round((done / total) * 100);
   } else {
     this.progress = 0;
   }

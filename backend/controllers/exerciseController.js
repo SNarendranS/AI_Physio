@@ -1,184 +1,83 @@
 const Exercise = require('../models/exercise');
-const PainData = require('../models/painData');
-const axios = require('axios');
 const CustomError = require('../errorHandlers/customError');
-require('dotenv').config();
 
-/**
- * 🧩 GET all exercises
- */
-const getAllExercises = async (req, res, next) => {
-  try {
-    const exercises = await Exercise.find();
-    res.status(200).json(exercises);
-  } catch (error) {
-    next(new CustomError(error.message, 500));
-  }
-};
-
-/**
- * 🧠 GET all exercises by user email
- */
+// GET all user exercises
 const getExercisesByEmail = async (req, res, next) => {
   try {
     const email = req.user.email;
-    const exercises = await Exercise.find({ userEmail: email.toLowerCase() });
-    if (!exercises.length) {
-      return next(new CustomError('No exercises found for this user', 404));
-    }
-    res.status(200).json(exercises);
-  } catch (error) {
-    next(new CustomError(error.message, 500));
+    const data = await Exercise.find({ userEmail: email });
+    res.json(data);
+  } catch (e) {
+    next(new CustomError(e.message, 500));
   }
 };
 
-/**
- * 🎯 GET unique exercise by userEmail + painDataId
- */
+// GET by painDataId
 const getExerciseByEmailAndPainId = async (req, res, next) => {
   try {
-    const { email } = req.user;
     const { painDataId } = req.params;
-    const exercise = await Exercise.findOne({
-      userEmail: email.toLowerCase(),
-      painDataId
-    });
-    if (!exercise) {
-      return next(new CustomError('Exercise not found for this user and pain data', 404));
-    }
-    res.status(200).json(exercise);
-  } catch (error) {
-    next(new CustomError(error.message, 500));
+    const email = req.user.email;
+    const data = await Exercise.findOne({ userEmail: email, painDataId });
+    if (!data) return next(new CustomError("Not found", 404));
+    res.json(data);
+  } catch (e) {
+    next(new CustomError(e.message, 500));
   }
 };
 
-/**
- * 🔍 GET exercise by ID
- */
+// GET by document id
 const getExerciseById = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const exercise = await Exercise.findById(id);
-    if (!exercise) {
-      return next(new CustomError('Exercise not found for this id', 404));
-    }
-    res.status(200).json(exercise);
-  } catch (error) {
-    next(new CustomError(error.message, 500));
+    const data = await Exercise.findById(req.params.id);
+    if (!data) return next(new CustomError("Not found", 404));
+    res.json(data);
+  } catch (e) {
+    next(new CustomError(e.message, 500));
   }
 };
 
-/**
- * 🤖 POST create exercise (supports multiple exercises)
- */
+// ✅ your AI creator stays as-is
 const createExercise = async (req, res, next) => {
   try {
     const userEmail = req.user.email;
-    //const { painDataId } = req.body;
     const painDataId = req.user.painDataId;
+    const ai = req.aiPayload;
 
-    if (!painDataId) {
-      return next(new CustomError('painDataId is required', 400));
+    if (!ai || !ai.plan) {
+      return next(new CustomError('No AI plan received', 400));
     }
 
-    const painData = await PainData.findById(painDataId);
-    if (!painData) {
-      return next(new CustomError('PainData not found', 404));
-    }
+    const formattedExercises = ai.plan.exercises.map(ex => ({
+      exerciseName: ex.name,
+      reps: ex.reps,
+      sets: ex.sets,
+      frequency: ex.frequency,
+      precautions: ex.precautions,
+      description: ex.description
+    }));
 
-    // 🧠 Call external AI recommender (Python backend)
-    const response = await axios.post(`${process.env.AI_URI}/ai/recommend`, painData, {
-      headers: {
-        'Authorization': 'Bearer ' + req.headers.authorization?.split(' ')[1],
-        'Content-Type': 'application/json'
-      }
-    });
-
-    const { exercises, progress } = response.data;
-
-    if (!Array.isArray(exercises) || exercises.length === 0) {
-      return next(new CustomError('Exercises array is required', 400));
-    }
-
-    // 🧩 Map AI output → MongoDB schema
-    const formattedExercises = exercises.map(ex => {
-      const formatted = {
-        exerciseName: ex.exerciseName,
-        exerciseType: ex.exerciseType,
-        set: ex.dosage?.sets || 3,
-        targetArea: ex.targetArea,
-        difficulty: ex.difficulty,
-        equipmentNeeded: ex.equipmentNeeded,
-        aiTrackingEnabled: ex.aiTrackingEnabled,
-        description: ex.description,
-        demoVideo: ex.demoVideo,
-        image: ex.image
-      };
-
-      if (ex.exerciseType === 'repetition') {
-        formatted.rep = ex.dosage?.reps || 10;
-      } else if (ex.exerciseType === 'hold') {
-        formatted.holdTime = ex.dosage?.hold_seconds || 5;
-      }
-
-      return formatted;
-    });
-
-    // 🧾 Save to DB
-    const newExercise = new Exercise({
+    const exerciseDoc = new Exercise({
       userEmail,
       painDataId,
-      exercises: formattedExercises,
-      progress: progress || 0
+      aiSummary: ai.plan.summary,
+      exercises: formattedExercises
     });
-    const savedExercise = await newExercise.save();
+
+    const savedExercise = await exerciseDoc.save();
 
     res.status(201).json({
-      message: 'Exercise created successfully',
-      savedExercise
+      message: 'AI Exercise plan created',
+      exercise: savedExercise
     });
-  } catch (error) {
-    next(new CustomError(error.message, 500));
-  }
-};
 
-
-
-/**
- * 🔄 PATCH update completed sets of an inner exercise
- */
-const updateExerciseProgress = async (req, res, next) => {
-  try {
-    const { id, exerciseIndex, completedSets } = req.body;
-
-    const exerciseDoc = await Exercise.findById(id);
-    if (!exerciseDoc) {
-      return next(new CustomError('Exercise not found', 404));
-    }
-
-    if (exerciseIndex >= exerciseDoc.exercises.length) {
-      return next(new CustomError('Invalid exercise index', 400));
-    }
-
-    exerciseDoc.exercises[exerciseIndex].completedSets = completedSets;
-
-    await exerciseDoc.save(); // triggers pre-save hook to auto-update progress
-
-    res.status(200).json({
-      message: 'Exercise progress updated',
-      progress: exerciseDoc.progress,
-      updatedExercise: exerciseDoc
-    });
   } catch (error) {
     next(new CustomError(error.message, 500));
   }
 };
 
 module.exports = {
-  getAllExercises,
+  createExercise,
   getExercisesByEmail,
   getExerciseByEmailAndPainId,
-  getExerciseById,
-  createExercise,
-  updateExerciseProgress
+  getExerciseById
 };

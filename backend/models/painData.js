@@ -6,6 +6,7 @@ const painDataSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+
   userEmail: {
     type: String,
     ref: 'User',
@@ -13,33 +14,63 @@ const painDataSchema = new mongoose.Schema({
     lowercase: true,
     trim: true
   },
-  injuryPlace: {
+
+  // New fields aligned with AI Physio backend
+  chiefComplaint: {
     type: String,
     required: true,
     trim: true
   },
-  painType: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  painLevel: {
+
+  painSeverity: {
     type: Number,
     required: true,
-    min: 1,
+    min: 0,
     max: 10,
     default: 5
   },
-  description: {
+
+  history: {
+    type: String,
+    trim: true,
+    default: ""
+  },
+
+  goals: {
+    type: [String],
+    default: []
+  },
+
+  extraContext: {
+    type: String,
+    trim: true,
+    default: ""
+  },
+
+  injuryArea: {
     type: String,
     trim: true
   },
+
   doctorSlip: {
-    data: Buffer,         // Binary image storage
-    contentType: String // MIME type (e.g., 'image/jpeg', 'image/png')
+    data: Buffer,
+    contentType: String
+  },
+
+  // AI sync tracking
+  aiSessionId: {
+    type: String
+  },
+
+  aiTriage: {
+    type: String
+  },
+
+  aiReasons: {
+    type: [String],
+    default: []
   }
-}, {
-  timestamps: true // Adds createdAt and updatedAt automatically
-});
+
+}, { timestamps: true });
 
 module.exports = mongoose.model('PainData', painDataSchema);
