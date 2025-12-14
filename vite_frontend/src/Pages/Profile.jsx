@@ -24,7 +24,8 @@ const Profile = () => {
     email: "",
     phoneNumber: "",
     profile: null,
-    dob: ""
+    dob: "",
+    age: 0
   });
 
   const [show, setShow] = useState({ email: false, phoneNumber: false });
@@ -66,16 +67,6 @@ const Profile = () => {
     }
   };
 
-  const calculateAge = (dob) => {
-    if (!dob) return "";
-    const birth = new Date(dob);
-    const today = new Date();
-    let age = today.getFullYear() - birth.getFullYear();
-    const m = today.getMonth() - birth.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
-    return age;
-  };
-
   const handleSave = async () => {
     try {
       const formData = new FormData();
@@ -104,7 +95,7 @@ const Profile = () => {
 
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>
-      <Paper elevation={4} sx={{ borderRadius:5,p: "2% 4%", width: 480,m:4 }}>
+      <Paper elevation={4} sx={{ borderRadius: 5, p: "2% 4%", width: 480, m: 4 }}>
         <Stack spacing={2}>
           <Typography variant="h5" align="center">
             My Profile
@@ -117,8 +108,8 @@ const Profile = () => {
                 previewProfile
                   ? previewProfile
                   : user.profile
-                  ? ImageProcess.renderImage(user.profile)
-                  : ""
+                    ? ImageProcess.renderImage(user.profile)
+                    : ""
               }
               sx={{ width: 100, height: 100 }}
             />
@@ -161,7 +152,8 @@ const Profile = () => {
             onChange={(e) => handleInputChange("dob", e.target.value)}
             InputLabelProps={{ shrink: true }}
             fullWidth
-            helperText={user.dob ? `Age: ${calculateAge(user.dob)} years` : ""}
+            helperText={user.dob ? `Age: ${user.age} years` : ""}
+
           />
 
           {/* Email (Masked) */}

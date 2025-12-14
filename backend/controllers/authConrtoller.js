@@ -7,9 +7,9 @@ const register = async (req, res, next) => {
   try {
     const { email } = req.body;
 
-    if (!isEmailVerified(email)) {
-      throw new Error("Email OTP not verified!");
-    }
+    // if (!isEmailVerified(email)) {
+    //   throw new Error("Email OTP not verified!");
+    // }
 
     const user = await User.create(req.body);
     const token = jwt.sign(

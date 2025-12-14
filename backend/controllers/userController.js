@@ -8,8 +8,8 @@ const getUser = async (req, res, next) => {
     const userData = await User.findOne({ email: userReq });
     if (!userData) return next(new CustomError('User not available', 404));
 
-    const { email, username, name, _id, phoneNumber, profile, dob, gender } = userData;
-    res.status(200).json({ email, username, name, _id, phoneNumber, profile, dob, gender });
+    const { email, username, name, _id, phoneNumber, profile, dob, gender,age } = userData;
+    res.status(200).json({ email, username, name, _id, phoneNumber, profile, dob, gender,age });
   } catch (error) {
     next(new CustomError(error.message, 500));
   }
@@ -22,8 +22,8 @@ const getUserById = async (req, res, next) => {
     const userData = await User.findById(id);
     if (!userData) return next(new CustomError('User not found', 404));
 
-    const { email, username, name, profile, dob, gender } = userData;
-    res.status(200).json({ email, username, name, profile, dob, gender });
+    const { email, username, name, profile, dob, gender,age } = userData;
+    res.status(200).json({ email, username, name, profile, dob, gender,age });
   } catch (error) {
     next(new CustomError(error.message, 500));
   }
@@ -42,7 +42,7 @@ const updateUser = async (req, res, next) => {
     if (username) updateDetail.username = username;
     if (dob) updateDetail.dob = dob;
     if (gender) updateDetail.gender = gender;
-
+    
     if (req.file) {
       updateDetail.profile = {
         data: req.file.buffer,

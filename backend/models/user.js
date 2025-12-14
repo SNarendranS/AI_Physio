@@ -6,26 +6,45 @@ const UserSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true, lowercase: true },
     email: { type: String, required: true, unique: true, lowercase: true },
     password: { type: String, required: true },
-    passwordCheck: { type: String }, // store plain password temporarily
+    passwordCheck: { type: String },
     phoneNumber: { type: String, unique: true, maxlength: 10 },
     profile: { data: Buffer, contentType: String },
     dob: { type: Date, required: true },
+    age: { type: Number }, // auto-calculated
     gender: { type: String, required: true, enum: ['male', 'female'] }
-
 }, { timestamps: true });
 
 // Hash password before saving
 UserSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) return next();
 
-    // Store plain password for testing
-    this.passwordCheck = this.password;
+    // 🔐 Password hashing (existing logic)
+    if (this.isModified('password')) {
+        this.passwordCheck = this.password;
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+    }
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+    // 🎂 Auto-calculate age when DOB changes or on create
+    if (this.isModified('dob')) {
+        const today = new Date();
+        const birthDate = new Date(this.dob);
+
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+
+        if (
+            monthDiff < 0 ||
+            (monthDiff === 0 && today.getDate() < birthDate.getDate())
+        ) {
+            age--;
+        }
+
+        this.age = age;
+    }
+
     next();
 });
+
 
 // Method to compare password
 UserSchema.methods.comparePassword = async function (password) {

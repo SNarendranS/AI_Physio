@@ -66,10 +66,10 @@ const Register = ({ AuthenticatedState }) => {
     const handleRegister = async (e) => {
         e.preventDefault();
 
-        if (!otpVerified) {
-            toast.error("Please verify your email OTP first!");
-            return;
-        }
+        // if (!otpVerified) {
+        //     toast.error("Please verify your email OTP first!");
+        //     return;
+        // }
 
         if (formData.password !== formData.confirmPassword) {
             toast.error("Passwords do not match!");

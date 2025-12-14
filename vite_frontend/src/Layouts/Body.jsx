@@ -3,12 +3,12 @@ import { Box, Container } from "@mui/material";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register";
-// import InputForm from "../../Pages/inputForm/InputForm";
 import Profile from "../Pages/Profile";
+import Contact from "../Pages/Contact";
+import InputForm from "../Pages/InputForm";
 // import PainDataList from "../../Pages/painDataList/PainDataList";
 // import ExerciseList from "../../Pages/exerciseList/ExerciseList";
 // import ExerciseDetails from "../../Pages/ExerciseDetails/ExerciseDetails";
-import Contact from "../Pages/Contact";
 
 // PrivateRoute: only accessible if logged in
 const PrivateRoute = ({ auth, children }) => {
@@ -52,7 +52,7 @@ const Body = ({ AuthenticatedState }) => {
             }
           />
 
-          {/* <Route
+          <Route
             path="/inputForm"
             element={
               <PrivateRoute auth={auth}>
@@ -60,7 +60,7 @@ const Body = ({ AuthenticatedState }) => {
               </PrivateRoute>
             }
           />
-          <Route
+          {/* <Route
             path="/data"
             element={
               <PrivateRoute auth={auth}>
