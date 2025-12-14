@@ -70,7 +70,6 @@ exports.postByUserEmailWithNext = async (req, res, next) => {
     });
 
     const ai = aiRes.data;
-    console.log(ai)
     // Save AI metadata
     savedPainData.aiSessionId = ai.session_id;
     savedPainData.aiTriage = ai.triage;

@@ -6,9 +6,10 @@ import Register from "../Pages/Register";
 import Profile from "../Pages/Profile";
 import Contact from "../Pages/Contact";
 import InputForm from "../Pages/InputForm";
+import ExerciseDetails from "../Pages/ExerciseDetail";
+import ExerciseList from "../Pages/ExerciseList";
+
 // import PainDataList from "../../Pages/painDataList/PainDataList";
-// import ExerciseList from "../../Pages/exerciseList/ExerciseList";
-// import ExerciseDetails from "../../Pages/ExerciseDetails/ExerciseDetails";
 
 // PrivateRoute: only accessible if logged in
 const PrivateRoute = ({ auth, children }) => {
@@ -60,6 +61,22 @@ const Body = ({ AuthenticatedState }) => {
               </PrivateRoute>
             }
           />
+           <Route
+            path="/exerciseDetail"
+            element={
+              <PrivateRoute auth={auth}>
+                <ExerciseDetails />
+              </PrivateRoute>
+            }
+          />
+           <Route
+            path="/exercise"
+            element={
+              <PrivateRoute auth={auth}>
+                <ExerciseList />
+              </PrivateRoute>
+            }
+          />
           {/* <Route
             path="/data"
             element={
@@ -84,24 +101,6 @@ const Body = ({ AuthenticatedState }) => {
               </PrivateRoute>
             }
           />
-          {/*} 
-          <Route
-            path="/exercise"
-            element={
-              <PrivateRoute auth={auth}>
-                <ExerciseList />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/exerciseDetail"
-            element={
-              <PrivateRoute auth={auth}>
-                <ExerciseDetails />
-              </PrivateRoute>
-            }
-          />*/}
-
           <Route
             path="*"
             element={<Navigate to={auth ? "/profile" : "/"} replace />}
