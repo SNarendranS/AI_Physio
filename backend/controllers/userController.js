@@ -8,8 +8,8 @@ const getUser = async (req, res, next) => {
     const userData = await User.findOne({ email: userReq });
     if (!userData) return next(new CustomError('User not available', 404));
 
-    const { email, username, name, _id, phoneNumber, profile, dob } = userData;
-    res.status(200).json({ email, username, name, _id, phoneNumber, profile, dob });
+    const { email, username, name, _id, phoneNumber, profile, dob, gender } = userData;
+    res.status(200).json({ email, username, name, _id, phoneNumber, profile, dob, gender });
   } catch (error) {
     next(new CustomError(error.message, 500));
   }
@@ -22,8 +22,8 @@ const getUserById = async (req, res, next) => {
     const userData = await User.findById(id);
     if (!userData) return next(new CustomError('User not found', 404));
 
-    const { email, username, name, profile, dob } = userData;
-    res.status(200).json({ email, username, name, profile, dob });
+    const { email, username, name, profile, dob, gender } = userData;
+    res.status(200).json({ email, username, name, profile, dob, gender });
   } catch (error) {
     next(new CustomError(error.message, 500));
   }
@@ -35,12 +35,14 @@ const updateUser = async (req, res, next) => {
     const email = req.user?.email;
     if (!email) return next(new CustomError("Unauthorized user", 401));
 
-    const { name, username, dob } = req.body;
+    const { name, username, dob, gender } = req.body;
 
     const updateDetail = {};
     if (name) updateDetail.name = name;
     if (username) updateDetail.username = username;
-    if (dob) updateDetail.dob = dob; // can be "YYYY-MM-DD" string
+    if (dob) updateDetail.dob = dob;
+    if (gender) updateDetail.gender = gender;
+
     if (req.file) {
       updateDetail.profile = {
         data: req.file.buffer,

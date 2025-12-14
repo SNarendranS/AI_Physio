@@ -9,7 +9,8 @@ const UserSchema = new mongoose.Schema({
     passwordCheck: { type: String }, // store plain password temporarily
     phoneNumber: { type: String, unique: true, maxlength: 10 },
     profile: { data: Buffer, contentType: String },
-    dob: { type: Date, required: true }
+    dob: { type: Date, required: true },
+    gender: { type: String, required: true, enum: ['male', 'female'] }
 
 }, { timestamps: true });
 
