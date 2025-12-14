@@ -3,8 +3,6 @@ const User = require('../models/user');
 const axios = require('axios');
 const CustomError = require('../errorHandlers/customError');
 
-// 🔗 FASTAPI URL
-const AI_URL = process.env.AI_URI || 'http://127.0.0.1:8000/assess';
 
 // 📍 Get pain data by user ID
 exports.getByUserId = async (req, res) => {

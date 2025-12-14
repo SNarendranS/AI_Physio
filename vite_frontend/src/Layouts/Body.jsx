@@ -8,8 +8,7 @@ import Contact from "../Pages/Contact";
 import InputForm from "../Pages/InputForm";
 import ExerciseDetails from "../Pages/ExerciseDetail";
 import ExerciseList from "../Pages/ExerciseList";
-
-// import PainDataList from "../../Pages/painDataList/PainDataList";
+import History from "../Pages/History";
 
 // PrivateRoute: only accessible if logged in
 const PrivateRoute = ({ auth, children }) => {
@@ -61,7 +60,7 @@ const Body = ({ AuthenticatedState }) => {
               </PrivateRoute>
             }
           />
-           <Route
+          <Route
             path="/exerciseDetail"
             element={
               <PrivateRoute auth={auth}>
@@ -69,7 +68,7 @@ const Body = ({ AuthenticatedState }) => {
               </PrivateRoute>
             }
           />
-           <Route
+          <Route
             path="/exercise"
             element={
               <PrivateRoute auth={auth}>
@@ -77,14 +76,14 @@ const Body = ({ AuthenticatedState }) => {
               </PrivateRoute>
             }
           />
-          {/* <Route
+          <Route
             path="/data"
             element={
               <PrivateRoute auth={auth}>
-                <PainDataList />
+                <History />
               </PrivateRoute>
             }
-          />*/}
+          />
           <Route
             path="/profile"
             element={
