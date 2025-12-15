@@ -101,7 +101,7 @@ const ExerciseDetails = () => {
                             {exerciseData.aiSummary}
                         </Typography>
 
-                        <Box>
+                        {/* <Box>
                             <Stack direction="row" justifyContent="space-between">
                                 <Typography variant="body2">Overall Progress</Typography>
                                 <Typography variant="body2" fontWeight={600}>
@@ -114,7 +114,7 @@ const ExerciseDetails = () => {
                                 value={exerciseData.progress}
                                 sx={{ height: 8, borderRadius: 4, mt: 0.5 }}
                             />
-                        </Box>
+                        </Box> */}
                     </Stack>
                 </CardContent>
             </Card>
@@ -181,7 +181,7 @@ const ExerciseDetails = () => {
 
 
                                 {/* Status */}
-                                <Grid item>
+                                {/* <Grid item>
                                     <Chip
                                         icon={
                                             ex.completed ? (
@@ -194,7 +194,7 @@ const ExerciseDetails = () => {
                                         color={ex.completed ? "success" : "warning"}
                                         size="small"
                                     />
-                                </Grid>
+                                </Grid> */}
                             </Grid>
                         </CardContent>
                     </Card>

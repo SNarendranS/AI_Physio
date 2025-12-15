@@ -145,7 +145,7 @@ const ExerciseList = () => {
                                                 </Stack>
                                             </Grid>
                                         </Grid>
-                                        <Grid item>
+                                        {/* <Grid item>
                                             <Stack spacing={1} alignItems="flex-end">
                                                 <Chip
                                                     label={severityUI.label}
@@ -162,14 +162,14 @@ const ExerciseList = () => {
                                                     variant="outlined"
                                                 />
                                             </Stack>
-                                        </Grid>
+                                        </Grid> */}
 
                                         {/* Arrow */}
 
                                     </Grid>
 
                                     {/* Progress Bar */}
-                                    <Box mt={2}>
+                                    {/* <Box mt={2}>
                                         <LinearProgress
                                             variant="determinate"
                                             value={session.progress}
@@ -182,7 +182,7 @@ const ExerciseList = () => {
                                                 }
                                             }}
                                         />
-                                    </Box>
+                                    </Box> */}
 
                                     {/* Date */}
                                     <Stack direction="row" spacing={1} alignItems="center" mt={1}>
