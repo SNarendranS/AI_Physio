@@ -54,9 +54,8 @@ exports.postByUserEmailWithNext = async (req, res, next) => {
     });
 
     const savedPainData = await newPainData.save();
-
     // 🔥 Call FastAPI AI
-    const aiRes = await axios.post(process.env.AI_URI || 'http://127.0.0.1:8000/assess', {
+    const aiRes = await axios.post(`${process.env.AI_URI}/assess`, {
       age: user.age || null,
       sex: user.gender || null,
       chief_complaint: chiefComplaint,
@@ -68,6 +67,7 @@ exports.postByUserEmailWithNext = async (req, res, next) => {
     });
 
     const ai = aiRes.data;
+
     // Save AI metadata
     savedPainData.aiSessionId = ai.session_id;
     savedPainData.aiTriage = ai.triage;

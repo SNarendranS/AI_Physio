@@ -41,6 +41,29 @@ UserSchema.pre('save', async function (next) {
 
         this.age = age;
     }
+    UserSchema.pre('findOneAndUpdate', function (next) {
+        const update = this.getUpdate();
+
+        if (update.dob) {
+            const today = new Date();
+            const birthDate = new Date(update.dob);
+
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+
+            if (
+                monthDiff < 0 ||
+                (monthDiff === 0 && today.getDate() < birthDate.getDate())
+            ) {
+                age--;
+            }
+
+            update.age = age;
+            this.setUpdate(update);
+        }
+
+        next();
+    });
 
     next();
 });
