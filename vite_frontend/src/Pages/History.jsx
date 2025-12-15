@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import {
-    Box,
+    Grid,
     Card,
     CardContent,
     Typography,
@@ -9,7 +9,8 @@ import {
     Stack,
     Divider,
     CircularProgress,
-    Container
+    Container,
+    Box
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -17,12 +18,11 @@ import PainDataService from "../services/painDataService";
 
 /* ---------------- Severity Config ---------------- */
 const getSeverityConfig = (severity) => {
-    if (severity <= 3)
-        return { label: "Mild", color: "success", bar: "#2e7d32" };
-    if (severity <= 6)
-        return { label: "Moderate", color: "warning", bar: "#ed6c02" };
+    if (severity <= 3) return { label: "Mild", color: "success", bar: "#2e7d32" };
+    if (severity <= 6) return { label: "Moderate", color: "warning", bar: "#ed6c02" };
     return { label: "Severe", color: "error", bar: "#d32f2f" };
 };
+
 
 const History = () => {
     const [painDataList, setPainDataList] = useState([]);
@@ -48,79 +48,73 @@ const History = () => {
         };
 
         fetchPainData();
-        return () => (mounted = false);
+        return () => {
+            mounted = false;
+        };
     }, []);
 
     if (loading) {
         return (
-            <Box textAlign="center" mt={6}>
+            <Container sx={{ textAlign: "center", mt: 8 }}>
                 <CircularProgress />
                 <Typography mt={2}>Loading your records...</Typography>
-            </Box>
+            </Container>
         );
     }
 
     return (
-        <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Box sx={{ p: 1, maxWidth: 2000, mx: "auto" }}>
-                <Typography variant="h5" fontWeight={700} mb={3}>
-                    Injury History
-                </Typography>
+        <Container maxWidth="xl">
+            <Typography variant="h5" fontWeight={700} mb={3}>
+                Injury History
+            </Typography>
 
-                {/* 🔒 LOCKED GRID SYSTEM */}
-                <Box
-                    sx={{
-                        display: "grid",
-                        gridTemplateColumns: {
-                            xs: "1fr",
-                            sm: "repeat(2, 1fr)",
-                            md: "repeat(3, 1fr)",
-                        },
-                        gap: 4
-                    }}
-                >
-                    {painDataList.map((item) => {
-                        const severity = getSeverityConfig(item.painSeverity);
+            <Grid container spacing={4} justifyContent={'space-evenly'}>
+                {painDataList.map((item) => {
+                    const severity = getSeverityConfig(item.painSeverity);
 
-                        return (
+                    return (
+                        <Grid item width={300} key={item._id}>
                             <Card
-                                key={item._id}
                                 elevation={4}
                                 sx={{
-                                    height: 480,
-                                    width: 450,
+                                    height: 450,
+                                    width: "100%",
+                                    minWidth: 0,
+                                    boxSizing: "border-box",
                                     display: "flex",
                                     flexDirection: "column",
                                     borderRadius: 3,
                                     overflow: "hidden",
-                                    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                                    transition: "transform .2s ease, box-shadow .2s ease",
                                     "&:hover": {
                                         transform: "translateY(-4px)",
                                         boxShadow: 6
                                     }
                                 }}
                             >
-                                {/* Severity Indicator */}
-                                <Box sx={{ height: 6, bgcolor: severity.bar }} />
+                                {/* Severity Bar */}
+                                <Box sx={{ height: 6, bgcolor: severity.bar, flexShrink: 0 }} />
 
                                 <CardContent
                                     sx={{
-                                        flexGrow: 1,
+                                        flex: 1,
+                                        minHeight: 0,
                                         display: "flex",
-                                        flexDirection: "column"
+                                        flexDirection: "column",
+                                        gap: 1
                                     }}
                                 >
-                                    {/* Header */}
-                                    <Stack direction="row" justifyContent="space-between">
+                                    <Stack
+                                        direction="row"
+                                        justifyContent="space-between"
+                                        alignItems="center"
+                                        sx={{ minWidth: 0 }}
+                                    >
                                         <Typography
                                             variant="h6"
-                                            sx={{
-                                                fontWeight: 600,
-                                                overflow: "hidden",
-                                                whiteSpace: "nowrap",
-                                                textOverflow: "ellipsis",
-                                                maxWidth: "72%"
-                                            }}
+                                            fontWeight={600}
+                                            noWrap
+                                            sx={{ minWidth: 0 }}
                                         >
                                             {item.chiefComplaint || "No Complaint"}
                                         </Typography>
@@ -129,12 +123,12 @@ const History = () => {
                                             label={severity.label}
                                             color={severity.color}
                                             size="small"
+                                            sx={{ flexShrink: 0 }}
                                         />
                                     </Stack>
 
-                                    <Divider sx={{ my: 1 }} />
+                                    <Divider />
 
-                                    {/* Body */}
                                     <Typography variant="body2">
                                         <strong>Pain Severity:</strong> {item.painSeverity}/10
                                     </Typography>
@@ -142,7 +136,6 @@ const History = () => {
                                     <Typography
                                         variant="body2"
                                         sx={{
-                                            mt: 1,
                                             display: "-webkit-box",
                                             WebkitLineClamp: 2,
                                             WebkitBoxOrient: "vertical",
@@ -152,13 +145,17 @@ const History = () => {
                                         <strong>History:</strong> {item.history || "N/A"}
                                     </Typography>
 
-                                    {/* Goals */}
                                     {item.goals?.length > 0 && (
-                                        <Box mt={1}>
+                                        <Box>
                                             <Typography variant="body2" fontWeight={600}>
                                                 Goals
                                             </Typography>
-                                            <Stack direction="row" spacing={1} flexWrap="wrap">
+                                            <Stack
+                                                direction="row"
+                                                spacing={1}
+                                                flexWrap="wrap"
+                                                sx={{ maxHeight: 64, overflow: "hidden" }}
+                                            >
                                                 {item.goals.slice(0, 4).map((g, i) => (
                                                     <Chip key={i} label={g} size="small" />
                                                 ))}
@@ -166,13 +163,18 @@ const History = () => {
                                         </Box>
                                     )}
 
-                                    {/* AI Notes */}
                                     {item.aiReasons?.length > 0 && (
-                                        <Box mt={1} sx={{ flexGrow: 1 }}>
+                                        <Box sx={{ flex: 1, minHeight: 0 }}>
                                             <Typography variant="body2" fontWeight={600}>
                                                 AI Notes
                                             </Typography>
-                                            <Box sx={{ maxHeight: 110, overflowY: "auto" }}>
+                                            <Box
+                                                sx={{
+                                                    overflowY: "auto",
+                                                    maxHeight: 120,
+                                                    pr: 1
+                                                }}
+                                            >
                                                 <ul style={{ paddingLeft: 18, margin: 0 }}>
                                                     {item.aiReasons.map((r, i) => (
                                                         <li key={i}>
@@ -184,7 +186,7 @@ const History = () => {
                                         </Box>
                                     )}
 
-                                    <Box mt={1}>
+                                    <Box>
                                         <Chip
                                             label={`Triage: ${item.aiTriage}`}
                                             size="small"
@@ -193,8 +195,7 @@ const History = () => {
                                     </Box>
                                 </CardContent>
 
-                                {/* Footer */}
-                                <Box p={2}>
+                                <Box p={2} flexShrink={0}>
                                     <Button
                                         fullWidth
                                         variant="contained"
@@ -208,13 +209,15 @@ const History = () => {
                                     </Button>
                                 </Box>
                             </Card>
-                        );
-                    })}
-                </Box>
-            </Box>
+                        </Grid>
+                    );
+                })}
+            </Grid>
         </Container>
-
     );
 };
 
 export default History;
+
+
+
