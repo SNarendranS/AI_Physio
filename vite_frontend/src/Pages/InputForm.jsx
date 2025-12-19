@@ -58,7 +58,7 @@ const InputForm = () => {
             const res = await PainDataService.postPainDataAndCreateExercise(formData);
 
             if (res.data?.exercise?.aiSummary == "Patient Summary") {
-                throw new Error("failed to create")
+                throw new Error("Seek physician immediately")
             }
 
             toast.success("AI Exercise plan created!");
@@ -72,7 +72,7 @@ const InputForm = () => {
             }
         } catch (err) {
             console.error(err);
-            toast.error(err.response?.data?.message || "Submission failed");
+            toast.error(err.response?.data?.message || "Seek physician immediately");
         }
     };
 
